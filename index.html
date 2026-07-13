@@ -83,11 +83,11 @@
 
         /* 主內容區區塊控制 */
         .main-content { padding: 0 15px; }
-        .day-panel { display: none; }
-        .day-panel.active { display: block; }
+        .app-panel { display: none; }
+        .app-panel.active { display: block; }
 
-        /* 天數標題與天氣按鈕 */
-        .day-header {
+        /* 天數與功能區標題 */
+        .panel-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -95,7 +95,7 @@
             border-left: 4px solid var(--primary-bg);
             padding-left: 8px;
         }
-        .day-header h2 { font-size: 1.2rem; color: var(--text-main); }
+        .panel-header h2 { font-size: 1.2rem; color: var(--text-main); }
         .weather-btn {
             background: #2980b9; color: white; border: none; padding: 4px 12px;
             border-radius: 15px; font-size: 0.8rem; text-decoration: none; display: inline-flex; align-items: center; gap: 5px;
@@ -116,18 +116,26 @@
         .flight-time-box { display: flex; justify-content: space-between; margin-top: 15px; font-size: 0.9rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; }
         .flight-time-box span { color: #f1c40f; font-weight: bold; }
 
-        /* 行程時間軸項目 */
+        /* 卡片與時間軸樣式 */
         .timeline-card {
             background: white; border-radius: 12px; padding: 15px; margin-bottom: 12px;
             display: flex; gap: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-            border-left: 4px solid #bdc3c7; transition: transform 0.2s;
+            border-left: 4px solid #bdc3c7;
         }
-        .timeline-card:hover { transform: translateY(-2px); border-left-color: var(--accent-orange); }
         .time-label { font-size: 0.9rem; font-weight: bold; color: var(--primary-bg); min-width: 45px; }
         .event-detail { flex-grow: 1; }
-        .event-title { font-weight: bold; font-size: 1rem; color: var(--text-main); margin-bottom: 4px; display: flex; align-items: center; justify-content: space-between; }
+        .event-title { font-weight: bold; font-size: 1rem; color: var(--text-main); margin-bottom: 4px; }
         .event-note { font-size: 0.85rem; color: #7f8c8d; line-height: 1.4; }
         .nav-link { color: #2980b9; text-decoration: none; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 3px; margin-top: 5px; }
+
+        /* 清單查核表樣式 */
+        .checklist-group { background: white; border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        .checklist-title { font-weight: bold; font-size: 1rem; color: var(--primary-bg); border-bottom: 1px solid #edf2f7; padding-bottom: 8px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .check-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; font-size: 0.9rem; line-height: 1.4; }
+        .check-item input { margin-top: 3px; cursor: pointer; }
+        .check-item.done { text-decoration: line-through; color: #a0aec0; }
+        .badge-status { background: #e2e8f0; color: #4a5568; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
+        .badge-card { background: #feebc8; color: #c05621; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
 
         /* 下方固定功能選單 */
         .bottom-nav-bar {
@@ -148,13 +156,13 @@
     <!-- 上方天數獨立按鈕選單 -->
     <div class="top-app-bar">
         <div class="app-title">🇯🇵 2026 九州自駕手冊</div>
-        <div class="date-tabs-container">
-            <button class="date-tab active" onclick="switchDay(1)">9/17 (四)</button>
-            <button class="date-tab" onclick="switchDay(2)">9/18 (五)</button>
-            <button class="date-tab" onclick="switchDay(3)">9/19 (六)</button>
-            <button class="date-tab" onclick="switchDay(4)">9/20 (日)</button>
-            <button class="date-tab" onclick="switchDay(5)">9/21 (一)</button>
-            <button class="date-tab" onclick="switchDay(6)">9/22 (二)</button>
+        <div class="date-tabs-container" id="date-tabs">
+            <button class="date-tab active" onclick="switchTab('day-1')">9/17 (四)</button>
+            <button class="date-tab" onclick="switchTab('day-2')">9/18 (五)</button>
+            <button class="date-tab" onclick="switchTab('day-3')">9/19 (六)</button>
+            <button class="date-tab" onclick="switchTab('day-4')">9/20 (日)</button>
+            <button class="date-tab" onclick="switchTab('day-5')">9/21 (一)</button>
+            <button class="date-tab" onclick="switchTab('day-6')">9/22 (二)</button>
         </div>
     </div>
 
@@ -170,15 +178,13 @@
     <div class="main-content">
 
         <!-- ==================== DAY 1 ==================== -->
-        <div id="day-panel-1" class="day-panel active">
-            <div class="day-header">
+        <div id="panel-day-1" class="app-panel active">
+            <div class="panel-header">
                 <h2>9/17 (四) | 跨海啟航與小倉城夜遊</h2>
                 <a href="https://www.jma.go.jp/bosai/weather_maps/" target="_blank" class="weather-btn"><i class="fa-solid fa-cloud-sun"></i>天氣預報</a>
             </div>
-
-            <!-- 豪華航空卡片 -->
             <div class="flight-card">
-                <div class="flight-airline">✈️ STARLUX AIRLINES / TIGER AIR TPE-FUK IT240</div>
+                <div class="flight-airline">✈️ TIGER AIR TPE-FUK IT240</div>
                 <div class="flight-main">
                     <div class="flight-loc"><h3>TPE</h3><p>台北桃園</p></div>
                     <div class="flight-path"><i class="fa-solid fa-plane"></i><br><span style="font-size:0.7rem;">3h 20m</span></div>
@@ -189,26 +195,22 @@
                     <div>降落 <span>09:35</span></div>
                 </div>
             </div>
-
-            <!-- 時間軸行程 -->
             <div class="timeline-card">
                 <div class="time-label">11:00</div>
                 <div class="event-detail">
                     <div class="event-title">福岡機場自駕取車 🚗</div>
-                    <div class="event-note">前往機場指定租車櫃台辦理手續，核對 KEP 權益。</div>
+                    <div class="event-note">前往租車櫃台辦理手續，確認加購 KEP 優惠。</div>
                     <a href="https://www.google.com/maps/search/?api=1&query=Fukuoka+Airport+Car+Rental" target="_blank" class="nav-link"><i class="fa-solid fa-location-arrow"></i>導航</a>
                 </div>
             </div>
-
             <div class="timeline-card">
                 <div class="time-label">14:00</div>
                 <div class="event-detail">
                     <div class="event-title">下關唐戶市場海鮮大啖 🐟</div>
-                    <div class="event-note">從機場開車長征約 85 KM，橫跨關門大橋，享受頂級新鮮海產與壽司。</div>
+                    <div class="event-note">車程約 85 KM，橫跨關門大橋，享受頂級新鮮海產與壽司。</div>
                     <a href="https://www.google.com/maps/search/?api=1&query=唐戶市場" target="_blank" class="nav-link"><i class="fa-solid fa-location-arrow"></i>導航</a>
                 </div>
             </div>
-
             <div class="timeline-card">
                 <div class="time-label">16:30</div>
                 <div class="event-detail">
@@ -217,33 +219,30 @@
                     <a href="https://www.google.com/maps/search/?api=1&query=門司港" target="_blank" class="nav-link"><i class="fa-solid fa-location-arrow"></i>導航</a>
                 </div>
             </div>
-
             <div class="timeline-card">
                 <div class="time-label">18:00</div>
                 <div class="event-detail">
                     <div class="event-title">晚餐：BEAR FRUITS 燒咖哩 🍽️</div>
-                    <div class="event-note">上戶彩極力推薦的名店，品嚐門司港最知名的焗烤燒咖哩飯。</div>
+                    <div class="event-note">名店品嚐著名的焗烤燒咖哩飯。</div>
                     <a href="https://www.google.com/maps/search/?api=1&query=BEAR+FRUITS+本店" target="_blank" class="nav-link"><i class="fa-solid fa-location-arrow"></i>導航</a>
                 </div>
             </div>
-
             <div class="timeline-card">
                 <div class="time-label">19:30</div>
                 <div class="event-detail">
                     <div class="event-title">入住：東橫INN小倉站南口 🏨</div>
-                    <div class="event-note">辦理入住手續並放置行李。（聯絡電話：+81-93-511-1045）</div>
+                    <div class="event-note">辦理入住（+81-93-511-1045），晚間可夜遊小倉城、吃一蘭拉麵。</div>
                     <a href="https://www.google.com/maps/search/?api=1&query=東橫INN小倉站南口" target="_blank" class="nav-link"><i class="fa-solid fa-location-arrow"></i>導航</a>
                 </div>
             </div>
         </div>
 
         <!-- ==================== DAY 2 ==================== -->
-        <div id="day-panel-2" class="day-panel">
-            <div class="day-header">
+        <div id="panel-day-2" class="app-panel">
+            <div class="panel-header">
                 <h2>9/18 (五) | 野生動物奇遇與由布院金鱗湖</h2>
                 <a href="https://www.jma.go.jp/" target="_blank" class="weather-btn"><i class="fa-solid fa-cloud-sun"></i>天氣預報</a>
             </div>
-
             <div class="timeline-card">
                 <div class="time-label">09:00</div>
                 <div class="event-detail">
@@ -252,33 +251,30 @@
                     <a href="https://www.google.com/maps/search/?api=1&query=九州自然動物公園" target="_blank" class="nav-link"><i class="fa-solid fa-location-arrow"></i>導航</a>
                 </div>
             </div>
-
             <div class="timeline-card" style="border-left-color: #c0392b;">
                 <div class="time-label">15:00</div>
                 <div class="event-detail">
                     <div class="event-title">由布院金鱗湖散策【核心死線】 🎯</div>
-                    <div class="event-note">車程約 26 KM。<b>15:00 已預約由布院釜飯心</b>，務必準時抵達用餐，隨後遊覽金鱗湖。</div>
+                    <div class="event-note"><b>15:00 已預約由布院釜飯心</b>，務必準時抵達用餐，隨後遊覽金鱗湖。</div>
                     <a href="https://www.google.com/maps/search/?api=1&query=由布院釜飯心+站前店" target="_blank" class="nav-link"><i class="fa-solid fa-location-arrow"></i>導航</a>
                 </div>
             </div>
-
             <div class="timeline-card">
                 <div class="time-label">19:30</div>
                 <div class="event-detail">
                     <div class="event-title">入住：AMANEK Beppu YULA-RE ♨️</div>
-                    <div class="event-note">前往別府頂級溫泉飯店入住（+81-97-776-5566），晚餐享用天婦羅 とよ常。</div>
+                    <div class="event-note">前往別府溫泉飯店入住（+81-97-776-5566），晚餐享用天婦羅 とよ常。</div>
                     <a href="https://www.google.com/maps/search/?api=1&query=AMANEK+Beppu+YULA-RE" target="_blank" class="nav-link"><i class="fa-solid fa-location-arrow"></i>導航</a>
                 </div>
             </div>
         </div>
 
         <!-- ==================== DAY 3 ==================== -->
-        <div id="day-panel-3" class="day-panel">
-            <div class="day-header">
+        <div id="panel-day-3" class="app-panel">
+            <div class="panel-header">
                 <h2>9/19 (六) | 絕景大橋、神話神社與熊本採購</h2>
                 <a href="https://www.jma.go.jp/" target="_blank" class="weather-btn"><i class="fa-solid fa-cloud-sun"></i>天氣預報</a>
             </div>
-
             <div class="timeline-card">
                 <div class="time-label">11:00</div>
                 <div class="event-detail">
@@ -287,42 +283,38 @@
                     <a href="https://www.google.com/maps/search/?api=1&query=九重夢大吊橋" target="_blank" class="nav-link"><i class="fa-solid fa-location-arrow"></i>導航</a>
                 </div>
             </div>
-
             <div class="timeline-card">
                 <div class="time-label">13:30</div>
                 <div class="event-detail">
                     <div class="event-title">參拜 上色見熊野座神社 ⛩️</div>
-                    <div class="event-note">走入宛如動漫綠色螢火之森的神祕神域，沉浸於巨石與參天古木。</div>
+                    <div class="event-note">走入宛如動漫綠色螢火之森的神祕神域。</div>
                     <a href="https://www.google.com/maps/search/?api=1&query=上色見熊野座神社" target="_blank" class="nav-link"><i class="fa-solid fa-location-arrow"></i>導航</a>
                 </div>
             </div>
-
             <div class="timeline-card">
                 <div class="time-label">17:00</div>
                 <div class="event-detail">
                     <div class="event-title">熊本好市多大採購 🛒</div>
-                    <div class="event-note">下山直奔熊本市區大補貨，隨後入住熊本城飯店（+81-96-326-3311），晚餐吃勝烈亭豬排。</div>
+                    <div class="event-note">直奔熊本市區大補貨，隨後入住熊本城飯店（+81-96-326-3311），晚餐吃勝烈亭豬排。</div>
                     <a href="https://www.google.com/maps/search/?api=1&query=Costco+Kumamoto" target="_blank" class="nav-link"><i class="fa-solid fa-location-arrow"></i>導航</a>
                 </div>
             </div>
         </div>
 
         <!-- ==================== DAY 4 ==================== -->
-        <div id="day-panel-4" class="day-panel">
-            <div class="day-header">
+        <div id="panel-day-4" class="app-panel">
+            <div class="panel-header">
                 <h2>9/20 (日) | 悠閒名園與名城全日深度遊</h2>
                 <a href="https://www.jma.go.jp/" target="_blank" class="weather-btn"><i class="fa-solid fa-cloud-sun"></i>天氣預報</a>
             </div>
-
             <div class="timeline-card">
                 <div class="time-label">11:00</div>
                 <div class="event-detail">
                     <div class="event-title">水前寺成趣園、永旺夢樂城 🌳</div>
-                    <div class="event-note">上午遊覽精緻的桃山式迴遊庭園，隨後前往大型商場吹冷氣逛街。</div>
+                    <div class="event-note">上午遊覽精緻的桃山式迴遊庭園，隨後前往大型商場。</div>
                     <a href="https://www.google.com/maps/search/?api=1&query=水前寺成趣園" target="_blank" class="nav-link"><i class="fa-solid fa-location-arrow"></i>導航</a>
                 </div>
             </div>
-
             <div class="timeline-card">
                 <div class="time-label">15:30</div>
                 <div class="event-detail">
@@ -334,66 +326,59 @@
         </div>
 
         <!-- ==================== DAY 5 ==================== -->
-        <div id="day-panel-5" class="day-panel">
-            <div class="day-header">
+        <div id="panel-day-5" class="app-panel">
+            <div class="panel-header">
                 <h2>9/21 (一) | 古意太宰府、糸島海岸與鋼彈地標</h2>
                 <a href="https://www.jma.go.jp/" target="_blank" class="weather-btn"><i class="fa-solid fa-cloud-sun"></i>天氣預報</a>
             </div>
-
             <div class="timeline-card">
                 <div class="time-label">10:30</div>
                 <div class="event-detail">
                     <div class="event-title">太宰府天滿宮散策、木造星巴克 ⛩️</div>
-                    <div class="event-note">參拜學問之神，品嚐現烤梅枝餅，朝聖隈研吾設計的網美星巴克。</div>
+                    <div class="event-note">參拜學問之神，朝聖隈研吾設計的網美星巴克。</div>
                     <a href="https://www.google.com/maps/search/?api=1&query=太宰府天滿宮" target="_blank" class="nav-link"><i class="fa-solid fa-location-arrow"></i>導航</a>
                 </div>
             </div>
-
             <div class="timeline-card">
                 <div class="time-label">16:00</div>
                 <div class="event-detail">
                     <div class="event-title">糸島二見浦夫妻岩、吃花鹽布丁 🌊</div>
-                    <div class="event-note">遠眺海中白色鳥居與夫妻岩，在夕陽海景下品嚐特製脆鹽手工布丁。</div>
+                    <div class="event-note">在夕陽海景下品嚐特製脆鹽手工布丁。</div>
                     <a href="https://www.google.com/maps/search/?api=1&query=二見浦+夫妻岩" target="_blank" class="nav-link"><i class="fa-solid fa-location-arrow"></i>導航</a>
                 </div>
             </div>
-
             <div class="timeline-card">
                 <div class="time-label">18:00</div>
                 <div class="event-detail">
                     <div class="event-title">LaLaport 福岡拍 1:1 實體大鋼彈 🤖</div>
-                    <div class="event-note">朝聖最新巨型 V 鋼彈動態秀，夜宿博多 montan HAKATA（+81-92-292-8376）。</div>
+                    <div class="event-note">朝聖巨型鋼彈動態秀，夜宿博多 montan HAKATA（+81-92-292-8376）。</div>
                     <a href="https://www.google.com/maps/search/?api=1&query=LaLaport+Fukuoka" target="_blank" class="nav-link"><i class="fa-solid fa-location-arrow"></i>導航</a>
                 </div>
             </div>
         </div>
 
         <!-- ==================== DAY 6 ==================== -->
-        <div id="day-panel-6" class="day-panel">
-            <div class="day-header">
+        <div id="panel-day-6" class="app-panel">
+            <div class="panel-header">
                 <h2>9/22 (二) | 博多最後總補給與離境返航</h2>
                 <a href="https://www.jma.go.jp/" target="_blank" class="weather-btn"><i class="fa-solid fa-cloud-sun"></i>天氣預報</a>
             </div>
-
             <div class="timeline-card">
                 <div class="time-label">09:00</div>
                 <div class="event-detail">
                     <div class="event-title">博多車站商圈最後名產大採購 🛍️</div>
-                    <div class="event-note">在博多阪急與地下街進行最後的土產狂熱補貨。</div>
+                    <div class="event-note">在博多阪急與地下街進行最後的土產補貨。</div>
                     <a href="https://www.google.com/maps/search/?api=1&query=博多車站" target="_blank" class="nav-link"><i class="fa-solid fa-location-arrow"></i>導航</a>
                 </div>
             </div>
-
             <div class="timeline-card" style="border-left-color: #e67e22;">
                 <div class="time-label">14:00</div>
                 <div class="event-detail">
                     <div class="event-title">自駕還車作業【安全提示】 🚗</div>
-                    <div class="event-note">開車返回機場附近還車點，<b>請記得在還車點附近的指定加油站將油箱加滿</b>！</div>
+                    <div class="event-note">開車返回機場附近還車點，<b>請記得在指定加油站將油箱加滿</b>！</div>
                     <a href="https://www.google.com/maps/search/?api=1&query=Fukuoka+Airport+Car+Return" target="_blank" class="nav-link"><i class="fa-solid fa-location-arrow"></i>導航</a>
                 </div>
             </div>
-
-            <!-- 豪華航空回程卡片 -->
             <div class="flight-card" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); margin-top: 15px;">
                 <div class="flight-airline">✈️ TIGER AIR FUK-KHH IT271</div>
                 <div class="flight-main">
@@ -408,36 +393,88 @@
             </div>
         </div>
 
+        <!-- ==================== 選單：清單頁面 (Checklist) ==================== -->
+        <div id="panel-checklist" class="app-panel">
+            <div class="panel-header">
+                <h2>📋 九州自駕行前準備與核對清單</h2>
+            </div>
+
+            <!-- 自駕必備文件 -->
+            <div class="checklist-group">
+                <div class="checklist-title"><i class="fa-solid fa-file-invoice"></i> 日本自駕必備文件</div>
+                <div class="check-item"><input type="checkbox"> <span>台灣駕照正本 <span class="badge-status">重要</span></span></div>
+                <div class="check-item"><input type="checkbox"> <span>台灣駕照日文譯本 <span class="badge-status">重要</span></span></div>
+                <div class="check-item"><input type="checkbox"> <span>護照正本（效期需在半年以上）</span></div>
+                <div class="check-item"><input type="checkbox"> <span>租車預約確認單（電子檔或紙本備份）</span></div>
+            </div>
+
+            <!-- 高端權益與信用卡配置 -->
+            <div class="checklist-group">
+                <div class="checklist-title"><i class="fa-solid fa-credit-card"></i> 權益核對與支付卡片配置</div>
+                <div class="check-item"><input type="checkbox"> <span><b>華航金卡權益</b> 核對（效期至2029/01/31）</span></div>
+                <div class="check-item"><input type="checkbox"> <span><b>中信華航璀璨無限卡</b>（機票/海外消費累積華航哩程）</span></div>
+                <div class="check-item"><input type="checkbox"> <span><b>長榮航空無限卡</b> & <b>星宇航空聯名卡</b>（備用哩程卡配置）</span></div>
+                <div class="check-item"><input type="checkbox"> <span><b>美國運通白金卡</b> (AE P卡) & <b>匯豐旅人無限卡</b></span></div>
+                <div class="check-item"><input type="checkbox"> <span><b>富邦吉鶴卡</b>（國內/日本在地消費備用）</span></div>
+            </div>
+
+            <!-- 行李與個人準備物品 -->
+            <div class="checklist-group">
+                <div class="checklist-title"><i class="fa-solid fa-suitcase"></i> 行李與個人物品準備</div>
+                <div class="check-item"><input type="checkbox"> <span>日本網卡 / eSIM 漫遊設定確認</span></div>
+                <div class="check-item"><input type="checkbox"> <span>車用手機支架、車充（自駕導航極度實用）</span></div>
+                <div class="check-item"><input type="checkbox"> <span>個人常備藥品、換洗衣物</span></div>
+                <div class="check-item"><input type="checkbox"> <span>Visit Japan Web (VJW) 填寫完成並截圖 QR Code</span></div>
+            </div>
+        </div>
+
     </div>
 
-    <!-- 下方固定六大功能選單 -->
+    <!-- 下方固定六大功能選單 (已將調車改為清單) -->
     <nav class="bottom-nav-bar">
-        <button class="nav-btn active"><i class="fa-solid fa-calendar-days"></i>行程</button>
+        <button class="nav-btn active" id="btn-itinerary" onclick="switchTab('day-1')"><i class="fa-solid fa-calendar-days"></i>行程</button>
         <button class="nav-btn"><i class="fa-solid fa-hamburger"></i>美食</button>
         <button class="nav-btn"><i class="fa-solid fa-ticket"></i>票券</button>
-        <button class="nav-btn"><i class="fa-solid fa-car-side"></i>調車</button>
+        <button class="nav-btn" id="btn-checklist" onclick="switchTab('checklist')"><i class="fa-solid fa-list-check"></i>清單</button>
         <button class="nav-btn"><i class="fa-solid fa-wallet"></i>帳本</button>
         <button class="nav-btn"><i class="fa-solid fa-location-dot"></i>打卡</button>
     </nav>
 
-    <!-- 天數切換 JS 邏輯 -->
+    <!-- 天數與選單切換 JS 邏輯 -->
     <script>
-        function switchDay(dayNum) {
-            // 隱藏所有天數區塊
-            document.querySelectorAll('.day-panel').forEach(panel => {
+        function switchTab(targetId) {
+            // 隱藏所有面板
+            document.querySelectorAll('.app-panel').forEach(panel => {
                 panel.classList.remove('active');
             });
-            // 取消上方所有按鈕的 active 狀態
+            // 移除上方日期按鈕的 active
             document.querySelectorAll('.date-tab').forEach(tab => {
                 tab.classList.remove('active');
             });
+            // 移除下方按鈕的 active
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
 
-            // 顯示當天區塊
-            document.getElementById('day-panel-' + dayNum).classList.add('active');
-            // 將點選的按鈕標註為 active
-            event.currentTarget.classList.add('active');
+            // 判斷是切換到天數還是切換到下方特定選單
+            if (targetId.startsWith('day-')) {
+                document.getElementById('panel-' + targetId).classList.add('active');
+                document.getElementById('btn-itinerary').classList.add('active');
+                
+                // 連動亮起上方對應的日期按鈕
+                const dayIndex = targetId.split('-')[1];
+                const tabs = document.querySelectorAll('.date-tab');
+                if(tabs[dayIndex - 1]) tabs[dayIndex - 1].classList.add('active');
+                
+                document.getElementById('date-tabs').style.display = 'flex';
+            } else if (targetId === 'checklist') {
+                document.getElementById('panel-checklist').classList.add('active');
+                document.getElementById('btn-checklist').classList.add('active');
+                
+                // 切換到清單時，可以隱藏上方日期列或維持不亮
+                document.getElementById('date-tabs').style.display = 'none';
+            }
             
-            // 自動向上捲動，優化瀏覽體驗
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>
