@@ -3,293 +3,361 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2026 九州自駕極致回饋之旅：終極執行手冊 (V1 完備版)</title>
+    <title>2026 九州自駕極致回饋之旅</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #34495e;
-            --accent-color: #e74c3c;
-            --bg-color: #ecf0f1;
-            --card-bg: #ffffff;
-            --text-color: #2c3e50;
-            --border-color: #bdc3c7;
+            --primary: #2c3e50;
+            --accent: #e74c3c;
+            --bg: #f8f9fa;
+            --card: #ffffff;
+            --text: #333333;
+            --nav-bg: #ffffff;
         }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, "Microsoft JhengHei";
-            line-height: 1.6;
-            color: var(--text-color);
-            background-color: var(--bg-color);
-            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Microsoft JhengHei", sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            padding-bottom: 70px; /* 為了底部選單留空 */
+        }
+
+        /* 頂部 Header */
+        .app-header {
+            background-color: var(--primary);
+            color: white;
             padding: 20px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        .container {
-            max-width: 1200px;
+        .app-header h1 { font-size: 1.4rem; }
+        .app-header p { font-size: 0.85rem; opacity: 0.8; margin-top: 5px; }
+
+        /* 主內容區 */
+        .app-content {
+            padding: 15px;
+            max-width: 600px;
             margin: 0 auto;
-            background: var(--card-bg);
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-        h1 {
-            text-align: center;
-            color: var(--primary-color);
-            border-bottom: 3px solid var(--primary-color);
-            padding-bottom: 10px;
-            margin-bottom: 5px;
+
+        /* 頁面切換邏輯 */
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; animation: fadeIn 0.3s ease; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .subtitle {
-            text-align: center;
-            color: #7f8c8d;
-            font-size: 1.1em;
-            margin-bottom: 30px;
-        }
-        .meta-info {
-            background: #f8f9fa;
+
+        /* 卡片樣式 */
+        .card {
+            background: var(--card);
+            border-radius: 12px;
             padding: 15px;
-            border-left: 5px solid var(--secondary-color);
-            margin-bottom: 30px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .card-title {
+            font-size: 1.1rem;
             font-weight: bold;
-        }
-        h2 {
-            color: var(--secondary-color);
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 5px;
-            margin-top: 30px;
-        }
-        .day-section {
-            margin-bottom: 25px;
-            padding: 15px;
-            background: #fafafa;
-            border-radius: 6px;
-            border: 1px solid #eed;
-        }
-        .day-title {
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #d35400;
+            color: var(--primary);
             margin-bottom: 10px;
-            display: flex;
-            align-items: center;
+            border-left: 4px solid var(--accent);
+            padding-left: 8px;
         }
-        .day-title i {
-            margin-right: 10px;
-        }
-        ul {
-            list-style: none;
-            padding-left: 0;
-            margin: 0;
-        }
-        li {
-            margin-bottom: 10px;
+
+        /* 行程時間軸 */
+        .timeline-item {
             position: relative;
-            padding-left: 25px;
+            padding-left: 30px;
+            padding-bottom: 15px;
+            border-left: 2px solid #ddd;
+            margin-left: 10px;
         }
-        li::before {
-            content: "•";
-            color: var(--accent-color);
-            font-weight: bold;
-            font-size: 1.2em;
-            position: absolute;
-            left: 5px;
-            top: -2px;
-        }
-        .highlight {
-            font-weight: bold;
-            color: #c0392b;
-        }
-        .btn-tag {
+        .timeline-item:last-child { border-left: none; padding-bottom: 0; }
+        .timeline-time {
+            font-size: 0.85rem;
             background: #e67e22;
             color: white;
             padding: 2px 6px;
-            border-radius: 3px;
-            font-size: 0.85em;
+            border-radius: 4px;
             font-weight: bold;
-            margin-right: 5px;
+            display: inline-block;
+            margin-bottom: 5px;
         }
-        .deadline-tag {
+        .timeline-title { font-weight: bold; font-size: 1rem; margin-bottom: 3px; }
+        .timeline-note { font-size: 0.85rem; color: #666; }
+        .deadline-badge {
             background: #c0392b;
             color: white;
-            padding: 2px 6px;
+            padding: 1px 5px;
             border-radius: 3px;
-            font-size: 0.85em;
+            font-size: 0.75rem;
             font-weight: bold;
-            margin-right: 5px;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-            margin-bottom: 20px;
+
+        /* 表格樣式 */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9rem; }
+        th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+        th { background: #f1f2f6; color: var(--primary); }
+
+        /* 底部導覽選單 */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--nav-bg);
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            z-index: 1000;
         }
-        th, td {
-            border: 1px solid var(--border-color);
-            padding: 12px;
-            text-align: left;
+        .nav-item {
+            background: none;
+            border: none;
+            color: #7f8c8d;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.75rem;
+            cursor: pointer;
+            width: 25%;
         }
-        th {
-            background-color: #f4f6f7;
-            color: var(--primary-color);
-        }
-        tr:nth-child(even) {
-            background-color: #fafbfc;
-        }
+        .nav-item i { font-size: 1.3rem; margin-bottom: 4px; }
+        .nav-item.active { color: var(--accent); font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>2026 九州自駕極致回饋之旅：終極執行手冊 (V1 完備版)</h1>
-    <div class="subtitle">自駕動線極大化 • 精準死線控制 • 時間管理手冊</div>
+    <!-- 頂部標題列 -->
+    <header class="app-header">
+        <h1 id="header-title">2026 九州自駕手冊</h1>
+        <p>2026/09/17 - 09/22 • 6天5夜自駕[cite: 1]</p>
+    </header>
 
-    <div class="meta-info">
-        <i class="fa-solid fa-calendar-days"></i> 執行期間：2026/09/17 (四) - 2026/09/22 (二)<br>
-        <i class="fa-solid fa-car"></i> 旅行型態：六天五夜公路自駕之旅[cite: 1]
-    </div>
+    <!-- App 主內容區 -->
+    <main class="app-content">
 
-    <h2><i class="fa-solid fa-map-location-dot"></i> 【每日精準行程與權益亮點】</h2>
+        <!-- 選單 1：總覽頁面 -->
+        <section id="panel-overview" class="tab-panel active">
+            <div class="card">
+                <div class="card-title">基本資訊</div>
+                <p><i class="fa-solid fa-car"></i> <b>型態：</b>六天五夜公路自駕之旅[cite: 1]</p>
+                <p><i class="fa-solid fa-plane"></i> <b>去程：</b>9/17 IT240 06:15-09:35 (TPE-FUK)[cite: 1]</p>
+                <p><i class="fa-solid fa-plane"></i> <b>回程：</b>9/22 IT271 18:05-19:55 (FUK-KHH)[cite: 1]</p>
+            </div>
+            <div class="card">
+                <div class="card-title">領隊核心叮嚀</div>
+                <p style="margin-bottom: 8px;">1. 取車時務必確認是否已加購 <b>KEP</b> (九州高速公路通行證)。</p>
+                <p>2. <span class="deadline-badge">🎯 核心死線</span> D2 15:00 由布院釜飯心預約，時間不可延誤[cite: 1]。</p>
+            </div>
+        </section>
 
-    <!-- D1 -->
-    <div class="day-section">
-        <div class="day-title"><i class="fa-solid fa-plane-departure"></i> D1 (9/17 四) | 跨海雙關啟航與小倉城夜遊</div>
-        <ul>
-            <li><span class="btn-tag">06:15 - 09:35</span> <span class="highlight">【航班啟航】</span> 桃園機場 (TPE) ➔ 福岡機場 (FUK)（台灣虎航 IT 240）[cite: 1]。</li>
-            <li><span class="btn-tag">11:00</span> <span class="highlight">【取車作業】</span> 抵達福岡機場，辦理自駕租車手續[cite: 1]。</li>
-            <li><span class="btn-tag">12:30</span> 開車前往下關唐戶市場（車程約 85 KM）[cite: 1]。</li>
-            <li><span class="btn-tag">14:00</span> <span class="highlight">【海鮮海味】</span> 逛唐戶市場，享用新鮮海產[cite: 1]。</li>
-            <li><span class="btn-tag">15:30</span> 開車返回門司港地區[cite: 1]。</li>
-            <li><span class="btn-tag">16:30</span> <span class="highlight">【港町散策】</span> 悠閒逛門司港歷史街區[cite: 1]。</li>
-            <li><span class="btn-tag">18:00</span> 【特色晚餐】 BEAR FRUITS 本店（招牌：焗烤燒咖哩）[cite: 1]。</li>
-            <li><span class="btn-tag">19:30</span> 【辦理入住】 東橫 INN 小倉站南口（電話：+81-93-511-1045）[cite: 1]。</li>
-            <li><span class="btn-tag">20:30</span> 【夜之散策】 夜遊小倉城，宵夜品嚐一蘭拉麵[cite: 1]。</li>
-        </ul>
-    </div>
+        <!-- 選單 2：每日行程頁面 -->
+        <section id="panel-itinerary" class="tab-panel">
+            <!-- 可自行複製切換天數的按鈕，這裡為了簡潔直接排下 -->
+            <div class="card">
+                <div class="card-title" style="color:#d35400;">D1 9/17 (四) 福岡 ➔ 小倉[cite: 1]</div>
+                <div class="timeline-item">
+                    <div class="timeline-time">06:15-09:35</div>
+                    <div class="timeline-title">台灣虎航 IT 240 啟航[cite: 1]</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-time">11:00</div>
+                    <div class="timeline-title">福岡機場取車作業[cite: 1]</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-time">14:00</div>
+                    <div class="timeline-title">下關唐戶市場海鮮大快朵頤 (車程85KM)[cite: 1]</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-time">16:30</div>
+                    <div class="timeline-title">門司港歷史街區散策[cite: 1]</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-time">18:00</div>
+                    <div class="timeline-title">晚餐：BEAR FRUITS 燒咖哩[cite: 1]</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-time">19:30</div>
+                    <div class="timeline-title">入住：東橫INN小倉站南口[cite: 1]</div>
+                    <div class="timeline-note">電話：+81-93-511-1045[cite: 1]</div>
+                </div>
+            </div>
 
-    <!-- D2 -->
-    <div class="day-section">
-        <div class="day-title"><i class="fa-solid fa-paw"></i> D2 (9/18 五) | 野生動物奇遇與由布院金鱗湖</div>
-        <ul>
-            <li><span class="btn-tag">08:00</span> 【活力早餐】 飯店早餐補給[cite: 1]。</li>
-            <li><span class="btn-tag">09:00</span> <span class="highlight">【動物探索】</span> 開車前往九州野生動物園（車程約 103 KM）[cite: 1]。</li>
-            <li><span class="btn-tag">13:00</span> 開車前往溫泉鄉由布院（車程約 26 KM）[cite: 1]。</li>
-            <li><span class="btn-tag">15:00</span> <span class="highlight">【由布散策】</span> 漫步由布院、金鱗湖、歐洲童話村[cite: 1]。</li>
-            <li><span class="deadline-tag">🎯 核心死線</span> <span class="highlight">15:00 預約由布院釜飯心</span>，務必準時抵達[cite: 1]。</li>
-            <li><span class="btn-tag">18:30</span> 開車前往別府溫泉（車程約 26 KM）[cite: 1]。</li>
-            <li><span class="btn-tag">19:30</span> 【溫泉入住】 AMANEK Beppu YULA-RE（電話：+81-97-776-5566）[cite: 1]。</li>
-            <li><span class="btn-tag">20:30</span> 【在地美味】 晚餐：天婦羅 とよ常[cite: 1]。</li>
-        </ul>
-    </div>
+            <div class="card">
+                <div class="card-title" style="color:#d35400;">D2 9/18 (五) 小倉 ➔ 由布院 ➔ 別府[cite: 1]</div>
+                <div class="timeline-item">
+                    <div class="timeline-time">09:00</div>
+                    <div class="timeline-title">開車前往 九州野生動物園 (103KM)[cite: 1]</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-time">15:00</div>
+                    <div class="timeline-title">由布院、金鱗湖散策[cite: 1]</div>
+                    <div class="timeline-note"><span class="deadline-badge">死線</span> 15:00 已預約由布院釜飯心[cite: 1]</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-time">19:30</div>
+                    <div class="timeline-title">入住：AMANEK Beppu YULA-RE[cite: 1]</div>
+                    <div class="timeline-note">電話：+81-97-776-5566 | 晚餐：天婦羅 とよ常[cite: 1]</div>
+                </div>
+            </div>
 
-    <!-- D3 -->
-    <div class="day-section">
-        <div class="day-title"><i class="fa-solid fa-bridge"></i> D3 (9/19 六) | 絕景大橋、神話神社與熊本採購</div>
-        <ul>
-            <li><span class="btn-tag">08:00</span> 【晨間餐點】 飯店客房早餐[cite: 1]。</li>
-            <li><span class="btn-tag">09:00</span> <span class="highlight">【極致高空】</span> 開車前往九重夢大橋（車程約 32 KM）[cite: 1]。</li>
-            <li><span class="btn-tag">11:00</span> 挑戰日本第一的九重夢大橋步行絕景[cite: 1]。</li>
-            <li><span class="btn-tag">12:00</span> 開車前往阿蘇地區（車程約 45 KM）[cite: 1]。</li>
-            <li><span class="btn-tag">13:30</span> <span class="highlight">【奇幻神域】</span> 參拜宛如動漫場景的上色見熊野座神社[cite: 1]。</li>
-            <li><span class="btn-tag">15:00</span> 【中途補給】 Lawson 阿蘇白川站休息調整[cite: 1]。</li>
-            <li><span class="btn-tag">17:00</span> <span class="highlight">【重火力採購】</span> 直奔熊本好市多（Costco）大肆採購[cite: 1]。</li>
-            <li><span class="btn-tag">19:30</span> 【城下入住】 熊本城飯店（電話：+81-96-326-3311）[cite: 1]。</li>
-            <li><span class="btn-tag">20:30</span> 【職人晚餐】 晚餐：勝烈亭炸豬排[cite: 1]。</li>
-        </ul>
-    </div>
+            <div class="card">
+                <div class="card-title" style="color:#d35400;">D3 9/19 (六) 別府 ➔ 阿蘇 ➔ 熊本[cite: 1]</div>
+                <div class="timeline-item">
+                    <div class="timeline-time">11:00</div>
+                    <div class="timeline-title">步行九重夢大橋絕景 (車程32KM)[cite: 1]</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-time">13:30</div>
+                    <div class="timeline-title">參拜 上色見熊野座神社[cite: 1]</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-time">17:00</div>
+                    <div class="timeline-title">熊本好市多大採購 ➔ 入住熊本城飯店[cite: 1]</div>
+                    <div class="timeline-note">飯店電話：+81-96-326-3311 | 晚餐：勝烈亭豬排[cite: 1]</div>
+                </div>
+            </div>
 
-    <!-- D4 -->
-    <div class="day-section">
-        <div class="day-title"><i class="fa-solid fa-gopuram"></i> D4 (9/20 日) | 悠閒名園與名城全日深度遊</div>
-        <ul>
-            <li><span class="btn-tag">08:00</span> 【晨間餐點】 飯店客房早餐[cite: 1]。</li>
-            <li><span class="btn-tag">11:00</span> 【名園逛街】 遊覽水前寺成趣園，隨後前往永旺夢樂城（AEON MALL）[cite: 1]。</li>
-            <li><span class="btn-tag">15:30</span> <span class="highlight">【歷史補貨】</span> 探訪熊本城、櫻之小路，傍晚衝唐吉訶德熊本下通店[cite: 1]。</li>
-            <li><span class="btn-tag">19:30</span> 【城下續住】 續住熊本城飯店（電話：+81-96-326-3311）[cite: 1]。</li>
-            <li><span class="btn-tag">20:30</span> 【頂級饗宴】 晚餐：馬肉料理 馬櫻[cite: 1]。</li>
-        </ul>
-    </div>
+            <div class="card">
+                <div class="card-title" style="color:#d35400;">D4 9/20 (日) 熊本全日深度遊[cite: 1]</div>
+                <div class="timeline-item">
+                    <div class="timeline-time">11:00</div>
+                    <div class="timeline-title">水前寺成趣園、永旺夢樂城逛街[cite: 1]</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-time">15:30</div>
+                    <div class="timeline-title">熊本城探訪、唐吉訶德下通店補貨[cite: 1]</div>
+                    <div class="timeline-note">續住熊本城飯店 | 晚餐：馬肉料理 馬櫻[cite: 1]</div>
+                </div>
+            </div>
 
-    <!-- D5 -->
-    <div class="day-section">
-        <div class="day-title"><i class="fa-solid fa-torii-gate"></i> D5 (9/21 一) | 古意太宰府、糸島海岸與鋼彈地標</div>
-        <ul>
-            <li><span class="btn-tag">08:00</span> 【晨間餐點】 飯店客房早餐[cite: 1]。</li>
-            <li><span class="btn-tag">09:00</span> 開車前往太宰府地區[cite: 1]。</li>
-            <li><span class="btn-tag">10:30</span> <span class="highlight">【文人散策】</span> 參策太宰府天滿宮、朝聖木造星巴克[cite: 1]。</li>
-            <li><span class="btn-tag">12:00</span> 【經典拉麵】 午餐：一蘭拉麵[cite: 1]。</li>
-            <li><span class="btn-tag">14:00</span> 開車前往糸島市（車程約 37 KM）[cite: 1]。</li>
-            <li><span class="btn-tag">16:00</span> <span class="highlight">【絕美海景】</span> 拍攝二見浦夫妻岩鳥居，品嚐手工花鹽布丁[cite: 1]。</li>
-            <li><span class="btn-tag">18:00</span> <span class="highlight">【地標採購】</span> 衝往 LaLaport 福岡，拍攝 1:1 實體大鋼彈[cite: 1]。</li>
-            <li><span class="btn-tag">19:30</span> 【博多入住】 montan HAKATA（電話：+81-92-292-8376）[cite: 1]。</li>
-            <li><span class="btn-tag">20:30</span> 【經典壽司】 晚餐：藏壽司[cite: 1]。</li>
-        </ul>
-    </div>
+            <div class="card">
+                <div class="card-title" style="color:#d35400;">D5 9/21 (一) 熊本 ➔ 太宰府 ➔ 糸島 ➔ 福岡[cite: 1]</div>
+                <div class="timeline-item">
+                    <div class="timeline-time">10:30</div>
+                    <div class="timeline-title">太宰府天滿宮散策、木造星巴克[cite: 1]</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-time">16:00</div>
+                    <div class="timeline-title">糸島二見浦夫妻岩、吃花鹽布丁[cite: 1]</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-time">18:00</div>
+                    <div class="timeline-title">LaLaport 福岡拍 1:1 實體大鋼彈[cite: 1]</div>
+                    <div class="timeline-note">入住：montan HAKATA (+81-92-292-8376) | 晚餐：藏壽司[cite: 1]</div>
+                </div>
+            </div>
 
-    <!-- D6 -->
-    <div class="day-section">
-        <div class="day-title"><i class="fa-solid fa-home"></i> D6 (9/22 二) | 博多最後總補給與離境返航</div>
-        <ul>
-            <li><span class="btn-tag">08:00</span> 【晨間餐點】 飯店客房早餐[cite: 1]。</li>
-            <li><span class="btn-tag">09:00</span> 【車站商圈】 博多車站附近進行最後名產採購[cite: 1]。</li>
-            <li><span class="btn-tag">12:00</span> 【博多總鎮守】 參拜櫛田神社[cite: 1]。</li>
-            <li><span class="btn-tag">14:00</span> <span class="highlight">【自駕還車】</span> 開車前往還車點交車（車程約 14 KM）[cite: 1]。</li>
-            <li><span class="btn-tag">15:30</span> 【轉運交通】 搭乘接駁車前往福岡機場[cite: 1]。</li>
-            <li><span class="btn-tag">16:30</span> <span class="highlight">【離境戰術】</span> 福岡機場辦理登機與行李託運手續[cite: 1]。</li>
-            <li><span class="btn-tag">18:05 - 19:55</span> <span class="highlight">【返航回程】</span> 福岡機場 (FUK) ➔ 高雄小港機場 (KHH)（台灣虎航 IT 271）[cite: 1]。</li>
-            <li><span class="btn-tag">20:00</span> <span class="highlight">【溫暖的家】</span> 順利抵達台灣，返回溫暖的家[cite: 1]。</li>
-            <li><span class="btn-tag">20:30</span> 【完美收尾】 宵夜：拆一包日本泡麵，回味完美旅程[cite: 1]。</li>
-        </ul>
-    </div>
+            <div class="card">
+                <div class="card-title" style="color:#d35400;">D6 9/22 (二) 博多 ➔ 福岡機場 ➔ 返家[cite: 1]</div>
+                <div class="timeline-item">
+                    <div class="timeline-time">09:00</div>
+                    <div class="timeline-title">博多車站商圈最後名產大採購[cite: 1]</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-time">14:00</div>
+                    <div class="timeline-title">辦理還車手續 (還車前須加滿油)[cite: 1]</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-time">18:05</div>
+                    <div class="timeline-title">台灣虎航 IT 271 班機返台 (FUK-KHH)[cite: 1]</div>
+                </div>
+            </div>
+        </section>
 
-    <h2><i class="fa-solid fa-route"></i> 【交通路段與里程速查表】</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>行程段落</th>
-                <th>建議交通工具</th>
-                <th>里程/時間估算</th>
-                <th>預估費用與權益叮嚀</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><b>D1:</b> 福岡機場 ➔ 唐戶市場</td>
-                <td>租車自駕</td>
-                <td>約 85 KM[cite: 1]</td>
-                <td>跨越關門大橋，注意出高速公路匝道。</td>
-            </tr>
-            <tr>
-                <td><b>D2:</b> 小倉 ➔ 九州野生動物園</td>
-                <td>租車自駕</td>
-                <td>約 103 KM[cite: 1]</td>
-                <td>走東九州自動車道，注意山路速限。</td>
-            </tr>
-            <tr>
-                <td><b>D3:</b> 別府 ➔ 九重夢 ➔ 阿蘇 ➔ 熊本</td>
-                <td>租車自駕</td>
-                <td>約 77 KM+[cite: 1]</td>
-                <td>外輪山路高低起伏，傍晚注意好市多行李負重。</td>
-            </tr>
-            <tr>
-                <td><b>D5:</b> 熊本 ➔ 太宰府 ➔ 糸島</td>
-                <td>租車自駕</td>
-                <td>約 37 KM+[cite: 1]</td>
-                <td>太宰府周邊假日易塞，強烈建議提早出發。</td>
-            </tr>
-            <tr>
-                <td><b>D6:</b> 博多市區 ➔ 機場還車點</td>
-                <td>租車自駕</td>
-                <td>約 14 KM[cite: 1]</td>
-                <td><b>還車作業：</b>還車前務必於機場旁指定加油站加滿油！</td>
-            </tr>
-        </tbody>
-    </table>
+        <!-- 選單 3：自駕路網與導航頁面 -->
+        <section id="panel-navigation" class="tab-panel">
+            <div class="card">
+                <div class="card-title">自駕路段里程速查</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>路段</th>
+                            <th>預估里程</th>
+                            <th>備註</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>FUK 機場 ➔ 唐戶市場</td><td>85 KM[cite: 1]</td><td>注意關門大橋匝道</td></tr>
+                        <tr><td>小倉 ➔ 九州動物園</td><td>103 KM[cite: 1]</td><td>行經東九州道</td></tr>
+                        <tr><td>別府 ➔ 九重夢 ➔ 熊本</td><td>77 KM+[cite: 1]</td><td>阿蘇山區路段</td></tr>
+                        <tr><td>熊本 ➔ 太宰府 ➔ 糸島</td><td>37 KM+[cite: 1]</td><td>假日太宰府易塞</td></tr>
+                        <tr><td>博多市區 ➔ 機場還車點</td><td>14 KM[cite: 1]</td><td>還車前須加滿油</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
 
-    <h2><i class="fa-solid fa-triangle-exclamation"></i> 【行政領隊專業叮嚀】</h2>
-    <ul>
-        <li><span class="highlight">高速公路通行證</span>：取車時務必確認是否已加購 KEP (Kyushu Expressway Pass)，以極大化過路費回饋。</li>
-        <li><span class="highlight">嚴格死線控制</span>：D2 由布院釜飯心（15:00）為核心死線，當日野生動物園的撤退時間需嚴格把控[cite: 1]。</li>
-    </ul>
-</div>
+        <!-- 選單 4：下榻住宿資訊頁面 -->
+        <section id="panel-hotels" class="tab-panel">
+            <div class="card">
+                <div class="card-title">9/17 (D1) 住宿</div>
+                <p><b>東橫 INN 小倉站南口</b>[cite: 1]</p>
+                <p style="color:#7f8c8d; font-size:0.9rem;">連絡電話：+81-93-511-1045[cite: 1]</p>
+            </div>
+            <div class="card">
+                <div class="card-title">9/18 (D2) 住宿</div>
+                <p><b>AMANEK Beppu YULA-RE</b>[cite: 1]</p>
+                <p style="color:#7f8c8d; font-size:0.9rem;">連絡電話：+81-97-776-5566[cite: 1]</p>
+            </div>
+            <div class="card">
+                <div class="card-title">9/19 - 9/20 (D3-D4) 住宿</div>
+                <p><b>熊本城飯店 (Kumamoto Castle Hotel)</b>[cite: 1]</p>
+                <p style="color:#7f8c8d; font-size:0.9rem;">連絡電話：+81-96-326-3311[cite: 1]</p>
+            </div>
+            <div class="card">
+                <div class="card-title">9/21 (D5) 住宿</div>
+                <p><b>montan HAKATA</b>[cite: 1]</p>
+                <p style="color:#7f8c8d; font-size:0.9rem;">連絡電話：+81-92-292-8376[cite: 1]</p>
+            </div>
+        </section>
 
+    </main>
+
+    <!-- 底部選單導覽列 (Bottom Navigation) -->
+    <nav class="bottom-nav">
+        <button class="nav-item active" onclick="switchTab('overview', '總覽')">
+            <i class="fa-solid fa-house"></i>總覽
+        </button>
+        <button class="nav-item" onclick="switchTab('itinerary', '每日行程')">
+            <i class="fa-solid fa-calendar-day"></i>行程
+        </button>
+        <button class="nav-item" onclick="switchTab('navigation', '自駕導航')">
+            <i class="fa-solid fa-route"></i>導航
+        </button>
+        <button class="nav-item" onclick="switchTab('hotels', '下榻住宿')">
+            <i class="fa-solid fa-hotel"></i>住宿
+        </button>
+    </nav>
+
+    <!-- 控制選單切換的 JavaScript -->
+    <script>
+        function switchTab(tabId, tabName) {
+            // 隱藏所有頁面板塊
+            document.querySelectorAll('.tab-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            // 取消所有選單按鈕的選取狀態
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // 顯示點選的板塊
+            document.getElementById('panel-' + tabId).classList.add('active');
+            // 將目前點擊的按鈕設為選取狀態
+            event.currentTarget.classList.add('active');
+            
+            // 動態更換頂部標題
+            document.getElementById('header-title').innerText = "九州自駕 • " + tabName;
+        }
+    </script>
 </body>
 </html>
